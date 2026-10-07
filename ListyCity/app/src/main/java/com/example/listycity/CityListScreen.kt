@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedTextField
@@ -26,6 +27,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.listycity.ui.theme.ListyCityTheme
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
+
+
+
+
 
 @Composable
 fun CityListScreen(
@@ -157,7 +164,11 @@ fun CityListScreen(
                 }
             }
         }
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            modifier = Modifier.weight(1f)
+
+        ) {
+
             itemsIndexed(cities) { index, city ->
                 CityRow(
                     city = city,
@@ -169,17 +180,33 @@ fun CityListScreen(
                         editedCityName = city.name
                         editedProvinceName = city.province
                         },
-                    onDelete = {
-                        onDeleteCity(city)
+
+                    )
 
 
-                    }
-                )
                 if (index < cities.lastIndex) {
                     HorizontalDivider()
                 }
+
+
+
             }
         }
+        Button(
+            onClick = {
+                selectedCity?.let { city ->
+                    onDeleteCity(city)
+                    selectedCity = null
+                }
+            },
+            modifier = Modifier.align(Alignment.End),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Red
+            )
+        ) {
+            Text("DELETE CITY")
+        }
+
     }
 }
 
@@ -187,8 +214,8 @@ fun CityListScreen(
 @Composable
 fun CityRow(
     city: City,
-    onClick: () -> Unit,
-    onDelete: () -> Unit
+    onClick: () -> Unit
+
 ) {
     Row(
         modifier = Modifier
@@ -207,11 +234,7 @@ fun CityRow(
             fontSize = 28.sp,
             modifier = Modifier.weight(1f)
         )
-        Button(
-            onClick = onDelete
-        ){
-            Text("DELETE")
-        }
+
 
     }
 }
